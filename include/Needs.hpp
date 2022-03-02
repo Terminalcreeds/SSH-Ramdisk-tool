@@ -5,7 +5,6 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <array>
 #define RESET   "\033[0m"
 #define RED     "\033[31m"
 
