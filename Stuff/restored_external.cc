@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]) {
    waitpid(pid, &i, 0);
    sleep(1);
    //
-   char *arg2[] = {"launchctl", "load", "/Library/LaunchDaemons/dropbear.plist", NULL};
+   char *arg2[] = {"launchctl", "load", "-w", "/Library/LaunchDaemons/com.openssh.sshd.plist", NULL};
    posix_spawn(&pid, "/bin/launchctl", NULL, NULL, (char* const*)arg2, NULL);
    waitpid(pid, &i, 0);
    sleep(99999);
