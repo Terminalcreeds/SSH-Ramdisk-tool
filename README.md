@@ -7,6 +7,9 @@ For this to work you need macOS catalina and higher, and  xcode installed!!!
 
 I tried linux but unfortunately kernel64patcher uses a library that is only found in mac. So it doesn't work on linux.
 ```
+
+I'm still working on the ssh part so if anyone got any suggestions feel free to tell me!
+
 Compiling:
 ```c++
 g++ main.cc -o RamdiskMaker -std=c++11
