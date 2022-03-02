@@ -57,6 +57,7 @@ namespace Apple {
       chdir("Kernel64Patcher");
       system("gcc Kernel64Patcher.c -o Kernel64Patcher");
       system("cp -v Kernel64Patcher /usr/local/bin");
+      chdir("..");
       system("rm -rf Kernel64Patcher");
     }
     std::ifstream kairos("/usr/local/bin/kairos");
