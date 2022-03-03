@@ -9,6 +9,7 @@ I tried linux but unfortunately kernel64patcher uses a library that is only foun
 ```
 
 I'm still working on the ssh part so if anyone got any suggestions feel free to tell me!
+It seems A8 and A9 have a problem booting ramdisk.
 
 Compiling:
 ```c++
