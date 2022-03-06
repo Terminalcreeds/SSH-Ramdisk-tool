@@ -9,6 +9,11 @@ int main(int argc, char **argv){
   std::cout << "Example: " << argv[0] << " -d iPad7,5 -i 14.5.1 -b j71bap -s bla/blob.shsh2" << std::endl;
    return -1;
  }
+ for(size_t i = 0; i < argc; i++){
+   if(strcmp(argv[i], "-p") == 0){
+     load::Pwndevice();
+   }
+ }
  while(--argc > 0){
   const char *args = *++argv;
    if(*args == '-') switch(args[1]){
@@ -25,13 +30,15 @@ int main(int argc, char **argv){
      if(argc >= 2){ blob = *++argv; argc--; continue; }
     std::cerr << "'" << args << "'" << " And... apples, bananas?\n Use '-h' for options" << std::endl;
     return -1;
+     case 'p':
+      continue;
     default:
      std::cerr << "'" << args << "'" << "? " << "There's just 4 damn options." << std::endl;
      return -1;
    }
  }
 
- std::ifstream dirchk((std::string("Patched") + "_" + version + "/ramdisk").c_str());
+ std::ifstream dirchk((std::string("Patched_") + identifier + "_" + version + "/ramdisk").c_str());
  if(dirchk){
    std::cout << "[i] Patched dir already exists. Going straight to booting.." << std::endl;
    std::cout << RED << "You ready to boot? y/n " << RESET;
@@ -80,8 +87,6 @@ system((std::string("img4 -i ") + load::ipsw.ramdisk + " -o ramdisk.dmg").c_str(
 std::cout << "[i] Done!" << std::endl << std::endl;
 sleep(1);
 
-std::cout << load::iBSSIV() << '\n' << load::iBSSKEY() << '\n' << load::iBECIV() << '\n' << load::iBECKEY() << '\n';
-
 std::cout << RED << " [i] Beginning to patch and sign the components.." << RESET << std::endl << std::endl;
 
 std::cout << RED << load::Time() << RESET << " [4] Decrypting & Patching iBSS.." << RESET << std::endl;
@@ -100,7 +105,11 @@ sleep(1);
 
 std::cout << RED << load::Time() << RESET << " [6] Decrypting & Patching kernel.." << RESET << std::endl;
 system((std::string("img4 -i ") + load::ipsw.Kernel + " -o kernel.raw").c_str());
-load::check(version); // if the version is above 14.8 it will not only patch amfi
+system("Kernel64Patcher kernel.raw kernel.patched -a");
+system("img4tool -c kernel.im4p -t rkrn kernel.patched --compression complzss"); // no need for the diff python script. compression does the job perfectly!
+system("img4tool -c KernelCache.img4 -p kernel.im4p");
+system("img4 -i KernelCache.img4 -M IM4M");
+std::cout << "[!] Done!" << std::endl << std::endl;
 sleep(1);
 
 std::cout << RED << load::Time() << RESET << " [7] Converting DeviceTree to rdtr.." << RESET << std::endl; // rdtr == restore devicetree
@@ -113,9 +122,9 @@ system((std::string("img4 -i ") + load::ipsw.trustcache + " -o Trustcache.img4 -
 std::cout << "[!] Done!" << std::endl << std::endl;
 sleep(1);
 chdir("..");
-mkdir((std::string("Patched") + "_" + version).c_str(), S_IRWXU);
+mkdir((std::string("Patched") + "_" + identifier + "_" + version).c_str(), S_IRWXU);
 chdir((std::string("WD_") + identifier + "_" + version).c_str());
-system((std::string("mv Trustcache.img4 ../Patched") + "_" + version + "; mv iBEC.img4 ../Patched" + "_" + version + "; mv iBSS.img4 ../Patched" + "_" + version + "; mv KernelCache.img4 ../Patched" + "_" + version + "; mv DeviceTree.img4 ../Patched" + "_" + version).c_str());
+system((std::string("mv Trustcache.img4 ../Patched") + "_" + identifier + "_" + version + "; mv iBEC.img4 ../Patched" + "_" + identifier + "_" + version + "; mv iBSS.img4 ../Patched" + "_" + identifier + "_" + version + "; mv KernelCache.img4 ../Patched" + "_" + identifier + "_" + version + "; mv DeviceTree.img4 ../Patched" + "_" + identifier + "_" + version).c_str());
 std::cout << "[i] Done!" << std::endl << std::endl;
 sleep(1);
 chdir("..");
@@ -135,9 +144,9 @@ system((std::string("xcrun -sdk iphoneos clang++ -arch arm64 ") + "Stuff/restore
 system("ldid2 -S restored_external");
 system((std::string("mv -v ") + load::ipsw.rdpath + "/usr/local/bin/restored_external " + load::ipsw.rdpath + "/usr/local/bin/restored_external_original").c_str());
 system((std::string("mv -v restored_external ") + load::ipsw.rdpath + "/usr/local/bin/restored_external").c_str());
+system((std::string("rsync --ignore-existing -avhuK --progress ./Stuff/ssh/ \"") + load::ipsw.rdpath + "\"").c_str());
 chdir((std::string("WD_") + identifier + "_" + version).c_str());
-
-
+system((std::string("rm-rf ") + load::ipsw.rdpath + "/usr/local/bin/restored_external0 && rm -rf " + load::ipsw.rdpath + "/usr/local/bin/restored_external1").c_str());
 std::string debs[] = {
 "https://apt.bingner.com/debs/550.58/shell-cmds_118-8_iphoneos-arm.deb",
 "https://apt.bingner.com/debs/550.58/bash_5.0.3-1_iphoneos-arm.deb",
@@ -156,8 +165,9 @@ std::string debs[] = {
 "https://apt.bingner.com/debs/1443.00/com.bingner.plutil_0.2.1_iphoneos-arm.deb",
 "https://apt.bingner.com/debs/1443.00/firmware-sbin_0-1_iphoneos-all.deb",
 "https://apt.bingner.com/debs/1443.00/launchctl-25_iphoneos-arm.deb",
-"https://cydia.ichitaso.com/debs/Dropbear.deb",
-"https://apt.bingner.com/debs/1443.00/openssl_1.1.1i-1_iphoneos-arm.deb"
+"https://apt.bingner.com/debs/1443.00/openssl_1.1.1i-1_iphoneos-arm.deb",
+"http://apt.saurik.com/debs/openssh_6.7p1-13_iphoneos-arm.deb",
+"https://apt.bingner.com/debs/550.58/openssl_1.0.2o-1_iphoneos-arm.deb"
 };
 // if you want to add more debs just put the link in the array above and the deb filename in the array below :)
 std::string deb[] = {
@@ -178,8 +188,9 @@ std::string deb[] = {
 "com.bingner.plutil_0.2.1_iphoneos-arm.deb",
 "firmware-sbin_0-1_iphoneos-all.deb",
 "launchctl-25_iphoneos-arm.deb",
-"Dropbear.deb",
-"openssl_1.1.1i-1_iphoneos-arm.deb"
+"openssl_1.1.1i-1_iphoneos-arm.deb",
+"openssh_6.7p1-13_iphoneos-arm.deb",
+"openssl_1.0.2o-1_iphoneos-arm.deb"
 };
 mkdir("bins", S_IRWXU);
 mkdir("temp", S_IRWXU);
@@ -199,11 +210,11 @@ chdir("..");
 }
 for(auto &i : deb) {
   chdir(((std::string(i) + ".dir").c_str()));
-  system((std::string("tar -C ../../bins -xzvkf data.*")).c_str());
+  system((std::string("tar -C ../../bins -xvf data.*")).c_str());
   chdir("..");
 }
 chdir("..");
-std::cout << RED << load::Time() << RESET << " [i] I've put sudo before the rsync command so it copys everything and nothing is left behind so it will ask for your password." << std::endl << "If your not comfortable with it just hit n it will run without sudo and y with sudo: ";
+std::cout << RED << load::Time() << RESET << " [i] I've put sudo before the rsync command so it copy's everything and nothing is left behind so it will ask for your password." << std::endl << "If your not comfortable with it just hit n it will run without sudo and y with sudo: ";
 std::cin >> input1;
 if(input1 == "y"){
 system((std::string("sudo rsync --ignore-existing -avhuK --progress ./bins/ \"") + load::ipsw.rdpath + "/\"").c_str());
@@ -211,25 +222,20 @@ system((std::string("sudo rsync --ignore-existing -avhuK --progress ./bins/ \"")
 else if(input1 == "n"){
 system((std::string("rsync --ignore-existing -avhuK --progress ./bins/ \"") + load::ipsw.rdpath + "/\"").c_str());
 }
-chdir("..");
-system((std::string("cp -v Stuff/dropbear.plist ") + load::ipsw.rdpath + "/Library/LaunchDaemons/dropbear.plist").c_str());
-system("dropbearkey -t rsa -f dropbear_rsa_host_key");
-system((std::string("mv -v dropbear_rsa_host_key ") + load::ipsw.rdpath + "/private/var").c_str());
-chdir((std::string("WD_") + identifier + "_" + version).c_str());
 
 system((std::string("hdiutil detach ") + load::ipsw.rdpath).c_str());
 std::cout << "[!] Done!" << std::endl << std::endl;
 sleep(1);
-std::cout << RED << load::Time() << RESET << "[9] Packing ramdisk back.." << std::endl;
+std::cout << RED << load::Time() << RESET << " [9] Packing ramdisk back.." << std::endl;
 system("img4 -i ramdisk.dmg -o ramdisk -M IM4M -A -T rdsk");
 system("clear");
-system((std::string("mv -v ramdisk ") + "../Patched" + "_" + version).c_str());
+system((std::string("mv -v ramdisk ") + "../Patched" + "_" + identifier + "_" + version).c_str());
 chdir("..");
 }
 else {
   return 0;
-} //
- // end else statement
+}
+std::cout << THICKRED << "[!] Keep in Mind. If your system is on ios 15, DO NOT TRY THIS TOOL!! \nIf the rootfs on ios 15 is mounted and edited you'll fuck up and the device will bootloop" << std::endl << std::endl;
 std::cout << "[i] Would you like to boot the ramdisk now? y/n: ";
 std::cin >> input2;
 if(input2 == "y"){
