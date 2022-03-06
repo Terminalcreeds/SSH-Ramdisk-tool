@@ -15,6 +15,16 @@ Compiling:
 ```c++
 g++ main.cc -o RamdiskMaker -std=c++11
 ```
+
+Usage:
+```c++
+Usage:
+    -d <identifier>
+    -i <version>
+    -b <board>
+    -s <blob>
+    -p <pwn the device and remove sigchecks>
+```
 If you have issues with the tool just tell me i will try and fix it :)
 
 (I know the code for dependencies is crappy im doing my best learning c++ :) )
