@@ -18,7 +18,6 @@ g++ main.cc -o RamdiskMaker -std=c++11
 
 Usage:
 ```c++
-Usage:
     -d <identifier>
     -i <version>
     -b <board>
