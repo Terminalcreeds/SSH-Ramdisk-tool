@@ -397,13 +397,14 @@ chdir((std::string("WD_") + identifier + "_" + version).c_str());
 return iBECkey.key;
 }
 
-int Help() {
-  std::cout << "Usage:" << std::endl;
-  std::cout << "\t-d <identifier>" << std::endl;
-  std::cout << "\t-i <version>" << std::endl;
-  std::cout << "\t-b <board>" << std::endl;
-  std::cout << "\t-s <blob>" << std::endl;
-  return 0;
+void Help() {
+  std::cout << "Usage:" << '\n';
+  std::cout << "\t-d <identifier>" << '\n';
+  std::cout << "\t-i <version>" << '\n';
+  std::cout << "\t-b <board>" << '\n';
+  std::cout << "\t-s <blob>" << '\n';
+  std::cout << "\t-p <pwn the device and remove sigchecks>" << '\n';
+  exit(1);
 }
 
 void Cleaner(std::string identifier, std::string version) {
