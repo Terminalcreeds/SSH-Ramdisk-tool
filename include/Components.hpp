@@ -517,6 +517,24 @@ while(1) {
     system("sudo ./ipwndfu --patch");
     break;
   }
+  else if(chipid == "A9" || chipid == "s8000" || chipid == "S8000" || chipid == "S8003" || chipid == "s8003" || chipid == "S5L8950" || chipid == "A6") {
+    system("git clone https://github.com/dora2-iOS/ipwnder_lite.git");
+    chdir("ipwnder_lite");
+    std::cout << "[!] Keep in mind. The device needs to be in DFU Mode!!" << '\n';
+    system("clear");
+    std::cout << "[i] Putting device in pwned dfu mode and removing sig checks..." << '\n';
+    system("make && ./ipwnder_macosx -p");
+    break;
+  }
+  else if(chipid == "A8" || chipid == "A8X" || chipid == "T7000" || chipid == "T7001" || chipid == "t7000" || chipid == "t7001" || chipid == "A8x") {
+    system("git clone https://github.com/0x7ff/eclipsa.git");
+    chdir("eclipsa");
+    system("make && ./eclipsa");
+    break;
+  }
+  else {
+    std::cout << "[?] The what now?? '" << chipid << "'???" << '\n';
+  }
  }
 }
 };
