@@ -30,8 +30,6 @@ int main(int argc, char **argv){
      if(argc >= 2){ blob = *++argv; argc--; continue; }
     std::cerr << "'" << args << "'" << " And... apples, bananas?\n Use '-h' for options" << std::endl;
     return -1;
-     case 'p':
-      continue;
     default:
      std::cerr << "'" << args << "'" << "? " << "There's just 4 damn options." << std::endl;
      return -1;
