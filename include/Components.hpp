@@ -153,7 +153,7 @@ keys keyspage;
 for(int r = 0; r < version.size(); r++){
  if(version[r] == '.'){
   version.erase(r);
-   system((std::string("curl -s -LO \"https://www.theiphonewiki.com/wiki/Firmware_Keys/") + version + ".x" + "\"").c_str());
+   system((std::string("curl -LO \"https://www.theiphonewiki.com/wiki/Firmware_Keys/") + version + ".x" + "\"").c_str());
     std::ifstream x((version + ".x"));
      while(getline(x, keyspage.page)){
       if(keyspage.page.find(identifier) != std::string::npos){
@@ -165,7 +165,7 @@ for(int r = 0; r < version.size(); r++){
             for(int p = 0; p < keyspage.page.size(); p++){
              if(keyspage.page[p] == '"'){
               keyspage.page.erase(p);
-               system((std::string("curl -s \"https://www.theiphonewiki.com") + keyspage.page + "\" -o keys.html").c_str());
+               system((std::string("curl \"https://www.theiphonewiki.com") + keyspage.page + "\" -o keys.html").c_str());
                 system((std::string("rm -r ") + version + ".x").c_str());
          }
         }
