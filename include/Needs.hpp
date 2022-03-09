@@ -7,6 +7,7 @@
 #include <unistd.h>
 #define RESET   "\033[0m"
 #define RED     "\033[31m"
+#define THICKRED     "\033[1m\033[31m"
 
 const char* identifier = NULL;
 const char* version = NULL;
