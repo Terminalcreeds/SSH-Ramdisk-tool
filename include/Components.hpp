@@ -267,8 +267,8 @@ chdir((std::string("WD_") + identifier + "_" + version).c_str());
 
 return ipsw.trustcache;
 }
-/*
-std::string iBSSIV() { // unused functs
+
+std::string iBSSIV() { 
 
 keys iBSSiv;
 
@@ -299,7 +299,7 @@ chdir((std::string("WD_") + identifier + "_" + version).c_str());
   }
 return iBSSiv.iv;
 }
-*/
+
 std::string iBSSIv() {
 
 keys iBSSiv;
@@ -337,7 +337,7 @@ chdir((std::string("WD_") + identifier + "_" + version).c_str());
   }
   return iBSSkey.key;
 }
-/*
+
 std::string iBSSKEY() {
 
 keys iBSSkey;
@@ -369,7 +369,7 @@ chdir((std::string("WD_") + identifier + "_" + version).c_str());
   }
 return iBSSkey.key;
 }
-*/
+
 std::string iBECIV() {
 
 keys iBECiv;
