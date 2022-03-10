@@ -29,6 +29,3 @@ If you have issues with the tool just tell me i will try and fix it :)
 (I know the code for dependencies is crappy im doing my best learning c++ :) )
 
 Thanks to everyone whose dependencies im using :)
-```
-fdbsgxbb
-```
