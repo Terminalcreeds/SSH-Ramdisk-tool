@@ -143,9 +143,7 @@ system((std::string("xcrun -sdk iphoneos clang++ -arch arm64 ") + "Stuff/restore
 system("ldid2 -S restored_external");
 system((std::string("mv -v ") + load::ipsw.rdpath + "/usr/local/bin/restored_external " + load::ipsw.rdpath + "/usr/local/bin/restored_external_original").c_str());
 system((std::string("mv -v restored_external ") + load::ipsw.rdpath + "/usr/local/bin/restored_external").c_str());
-system((std::string("rsync --ignore-existing -avhuK --progress ./Stuff/shi/ \"") + load::ipsw.rdpath + "\"").c_str());
 chdir((std::string("WD_") + identifier + "_" + version).c_str());
-system((std::string("rm -rf ") + load::ipsw.rdpath + "/usr/local/bin/restored_external0 && rm -rf " + load::ipsw.rdpath + "/usr/local/bin/restored_external1").c_str());
 std::string debs[] = {
 "https://apt.bingner.com/debs/550.58/shell-cmds_118-8_iphoneos-arm.deb",
 "https://apt.bingner.com/debs/550.58/bash_5.0.3-1_iphoneos-arm.deb",
