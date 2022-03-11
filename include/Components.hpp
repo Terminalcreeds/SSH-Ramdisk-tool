@@ -521,7 +521,7 @@ std::string tolower(std::string Boardid){
  return Boardid;
 }
 
-void Pwndevice() {
+int Pwndevice() {
 
 std::string chipid;
 
@@ -529,7 +529,7 @@ std::cout << "[?] What is your cpid? ";
 std::cin >> chipid;
 
 while(1) {
-  if(chipid == "A10" || chipid == "0x8010" || chipid == "t8010" || chipid == "A10X" || chipid == "0x8011" || chipid == "t8011" || chipid == "S5L8960" || chipid == "A7" || chipid == "S5L8965"){
+  if(chipid == "A10X" || chipid == "0x8011" || chipid == "t8011" || chipid == "S5L8960" || chipid == "A7" || chipid == "S5L8965"){
     system("git clone https://github.com/MatthewPierson/ipwndfu_public");
     chdir("ipwndfu_public");
     std::cout << "[!] Keep in mind. The device needs to be in DFU Mode!!" << '\n';
@@ -553,7 +553,7 @@ while(1) {
     system("sudo ./ipwndfu --patch");
     break;
   }
-  else if(chipid == "A9" || chipid == "s8000" || chipid == "S8000" || chipid == "S8003" || chipid == "s8003" || chipid == "S5L8950" || chipid == "A6") {
+  else if(chipid == "A10" || chipid == "0x8010" || chipid == "t8010" || chipid == "A9" || chipid == "s8000" || chipid == "S8000" || chipid == "S8003" || chipid == "s8003" || chipid == "S5L8950" || chipid == "A6") {
     system("git clone https://github.com/dora2-iOS/ipwnder_lite.git");
     chdir("ipwnder_lite");
     std::cout << "[!] Keep in mind. The device needs to be in DFU Mode!!" << '\n';
@@ -570,8 +570,11 @@ while(1) {
   }
   else {
     std::cout << "[?] The what now?? '" << chipid << "'???" << '\n';
+    exit(EXIT_FAILURE); // if you specified -p after -d and -i the whole code will not run IF it ever hits this else statement
+    break;
   }
  }
+ return 0;
 }
 };
 #endif /* Components_hpp */
