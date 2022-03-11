@@ -9,32 +9,26 @@ int main(int argc, char **argv){
   std::cout << "Example: " << argv[0] << " -d iPad7,5 -i 14.5.1 -b j71bap -s bla/blob.shsh2" << std::endl;
    return -1;
  }
- for(size_t i = 0; i < argc; i++){
-   if(strcmp(argv[i], "-p") == 0){
+ 
+for(size_t i = 0; i < argc; i++)
+{
+   if(strcmp(argv[i], "-d") == 0) {
+     identifier = argv[i + 1]; // +1 because else it will store '-d' in identifier
+   }
+   if(strcmp(argv[i], "-i") == 0) {
+     version = argv[i + 1];
+   }
+   if(strcmp(argv[i], "-b") == 0) {
+     board = argv[i + 1];
+   }
+   if(strcmp(argv[i], "-s") == 0) {
+     blob = argv[i + 1];
+   }
+   if(strcmp(argv[i], "-p") == 0) {
      load::Pwndevice();
    }
- }
- while(--argc > 0){
-  const char *args = *++argv;
-   if(*args == '-') switch(args[1]){
-    case 'h':
-     load::Help();
-     return -1;
-    case 'd':
-     if(argc >= 2){ identifier = *++argv; argc--; continue; }
-    case 'i':
-     if(argc >= 2){ version = *++argv; argc--; continue; }
-    case 'b':
-     if(argc >= 2){ board = *++argv; argc--; continue; }
-    case 's':
-     if(argc >= 2){ blob = *++argv; argc--; continue; }
-    std::cerr << "'" << args << "'" << " And... apples, bananas?\n Use '-h' for options" << std::endl;
-    return -1;
-    default:
-     std::cerr << "'" << args << "'" << "? " << "There's just 4 damn options." << std::endl;
-     return -1;
-   }
- }
+
+}
 
  std::ifstream dirchk((std::string("Patched_") + identifier + "_" + version + "/ramdisk").c_str());
  if(dirchk){
