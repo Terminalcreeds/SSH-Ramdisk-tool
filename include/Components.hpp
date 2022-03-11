@@ -539,6 +539,7 @@ while(1) {
     sleep(2);
     std::cout << "[i] Removing signature checks..." << '\n';
     system("sudo python rmsigchks.py");
+    chdir("..");
     break;
   }
   else if(chipid == "A11" || chipid == "t8015" || chipid == "0x8015") {
@@ -551,6 +552,7 @@ while(1) {
     sleep(2);
     std::cout << "[i] Removing signature checks..." << '\n';
     system("sudo ./ipwndfu --patch");
+    chdir("..");
     break;
   }
   else if(chipid == "A10" || chipid == "0x8010" || chipid == "t8010" || chipid == "A9" || chipid == "s8000" || chipid == "S8000" || chipid == "S8003" || chipid == "s8003" || chipid == "S5L8950" || chipid == "A6") {
@@ -559,13 +561,16 @@ while(1) {
     std::cout << "[!] Keep in mind. The device needs to be in DFU Mode!!" << '\n';
     system("clear");
     std::cout << "[i] Putting device in pwned dfu mode and removing sig checks..." << '\n';
-    system("make && ./ipwnder_macosx -p");
+    system("make");
+    system("./ipwnder_macosx -p");
+    chdir("..");
     break;
   }
   else if(chipid == "A8" || chipid == "A8X" || chipid == "T7000" || chipid == "T7001" || chipid == "t7000" || chipid == "t7001" || chipid == "A8x") {
     system("git clone https://github.com/0x7ff/eclipsa.git");
     chdir("eclipsa");
     system("make && ./eclipsa");
+    chdir("..");
     break;
   }
   else {
