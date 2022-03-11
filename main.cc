@@ -6,7 +6,7 @@
 int main(int argc, char **argv){
 
  if(argc < 2){
-  std::cout << "Example: " << argv[0] << " -d iPad7,5 -i 14.5.1 -b j71bap -s bla/blob.shsh2" << std::endl;
+  std::cout << "Example: " << argv[0] << " -d iPad7,5 -i 14.5.1 -b j71bap -s bla/blob.shsh2 [-p]" << std::endl;
    return -1;
  }
  
