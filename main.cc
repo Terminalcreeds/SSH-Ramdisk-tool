@@ -27,7 +27,9 @@ for(size_t i = 0; i < argc; i++)
    if(strcmp(argv[i], "-p") == 0) {
      load::Pwndevice();
    }
-
+ else {
+  std::cout << "[?] Huh?" << '\n';
+ }
 }
 
  std::ifstream dirchk((std::string("Patched_") + identifier + "_" + version + "/ramdisk").c_str());
