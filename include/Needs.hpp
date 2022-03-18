@@ -7,14 +7,18 @@
 #include <unistd.h>
 #define RESET   "\033[0m"
 #define RED     "\033[31m"
-#define THICKRED     "\033[1m\033[31m"
+#define THICKRED  "\033[1m\033[31m"
 
 const char* identifier = NULL;
 const char* version = NULL;
 const char* board = NULL;
-const std::string Board;
 const char* blob = NULL;
-std::string input1, input2;
+const char* logo = NULL;
+const std::string Board;
+std::string input1;
+std::string input2;
+bool verbose = false;
+bool customlogo = false;
 
 namespace Apple {
   int Needs(){
@@ -82,6 +86,7 @@ namespace Apple {
     std::ifstream pzb("/usr/local/bin/pzb");
     if(!pzb){
       std::cerr << "[!] Partialzipbrowser not found. Installing it for you.." << std::endl;
+      system("brew install libzip"); // pzb will not work if this is not present
       system("curl -LO https://github.com/tihmstar/partialZipBrowser/releases/download/36/buildroot_macos-latest.zip");
       system("unzip buildroot_macos-latest.zip");
       chdir("buildroot_macos-latest/usr/local/bin");
