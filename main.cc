@@ -29,6 +29,7 @@ for(size_t i = 0; i < argc; i++)
    }
  else {
   std::cout << "[?] Huh?" << '\n';
+  break;
  }
 }
 
