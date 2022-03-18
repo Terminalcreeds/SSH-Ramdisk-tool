@@ -30,6 +30,7 @@ Usage:
 If you have issues with the tool just tell me i will try and fix it :)
 
 Note: you need to specify -v/-c after -d. -i, -b and -s. -p can be used apart. After -c opt drag n drop your logo. 
+
 [ -v / -c will NOT boot ramdisk!!]
 
 I haven't tested the custom bootlogo one yet so it may not work.
