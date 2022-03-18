@@ -6,27 +6,32 @@
 #define THICKRED     "\033[1m\033[31m"
 
 int main(int argc, char const *argv[]) {
-  std::cout << THICKRED << "@@    @    @@@@     @@@@   @  @@@@@   @@@@   @   @  @@@@@@   @@@@@      @@@@  " << RESET << std::endl;
-  std::cout << THICKRED << "@ @   @  @     @    @   @       @    @    @  @   @  @       @     @   @     @ " << RESET << std::endl;
-  std::cout << THICKRED << "@  @  @  @     @    @ @@   @    @    @       @@@@@  @@@        @           @  " << RESET << std::endl; // if you look closely this shit spawns in the fucking verbose messages
-  std::cout << THICKRED << "@   @ @  @     @    @   @  @    @    @    @  @   @  @       @    @       @    " << RESET << std::endl;
-  std::cout << THICKRED << "@    @@    @@@@     @@@@   @    @     @@@@   @   @  @@@@@@   @@@@             " << RESET << std::endl;
-  std::cout << THICKRED << "                                                                         @    " << RESET << std::endl << std::endl;
+
+  std::cout << THICKRED << "[i] Starting restored external..." << RESET << '\n';
+
   int pid, i;
+  std::cout << THICKRED << "[i] Mounting Rootfs..." << RESET << '\n';
    char *arg[] = {"mount_apfs", "/dev/disk0s1s1", "/mnt1", NULL}; // /dev/disk0s1s1 == rootfs
    posix_spawn(&pid, "/System/Library/Filesystems/apfs.fs/mount_apfs", NULL, NULL, (char* const*)arg, NULL);
    waitpid(pid, &i, 0);
+   std::cout << THICKRED << "[i] Done?" << RESET << '\n';
    //
-   char *arg3[] = {"bash","-c","/System/Library/Filesystems/apfs.fs/mount_apfs /dev/disk0s1s2 /mnt2", NULL}; // /private/var is mounted on this one
-   posix_spawn(&pid, "/bin/bash",NULL, NULL, (char* const*)arg3, NULL);
+   std::cout << THICKRED << "[i] Mounting data partition..." << RESET << '\n';
+   char *arg2[] = {"mount_apfs", "/dev/disk0s1s2", "/mnt2", NULL}; // /dev/disk0s1s1 == rootfs
+   posix_spawn(&pid, "/System/Library/Filesystems/apfs.fs/mount_apfs", NULL, NULL, (char* const*)arg2, NULL);
    waitpid(pid, &i, 0);
+   std::cout << THICKRED << "[i] Done?" << RESET << '\n';
    sleep(1);
    //
-   char *arg4[] = {"restored_external", "-server", NULL};
-   posix_spawn(&pid, "/usr/local/bin/restored_external_original", NULL, NULL, (char* const*)arg4, NULL);
+   char *arg3[] = {"restored_external", "-server", NULL};
+   posix_spawn(&pid, "/usr/local/bin/restored_external_original", NULL, NULL, (char* const*)arg3, NULL);
    waitpid(pid, &i, 0);
    sleep(1);
+   std::cout << THICKRED << "[i] Starting USB Services?" << RESET << '\n';
+   char* arg4[] = {"launchctl", "load", "-w", "/System/Library/AppleUSBDevice/USBDeviceConfiguration.plist"};
+   posix_spawn(&pid, "/bin/launchctl", NULL, NULL, (char* const*)arg4, NULL);
+   waitpid(pid, &i, 0);
+   std::cout << THICKRED << "[i] Done?" << RESET << '\n';
    sleep(99999);
   return 0;
 }
-
