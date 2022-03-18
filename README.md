@@ -18,11 +18,14 @@ g++ main.cc -o RamdiskMaker -std=c++11
 
 Usage:
 ```c++
-    -d <identifier>
-    -i <version>
-    -b <board>
-    -s <blob>
-    -p <pwn the device and remove sigchecks>
+    Options:
+     -d device identifier e.g. iPad7,5
+     -i iOS version e.g. 14.8
+     -b boardconfig e.g. j71bAP
+     -s SHSH Blob file
+     -p Pwn the device and remove sigchecks
+     -v Just boot the device verbose
+     -c Boot the device with custom boot logo
 ```
 If you have issues with the tool just tell me i will try and fix it :)
 
