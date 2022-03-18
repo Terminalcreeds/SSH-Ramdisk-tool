@@ -29,7 +29,7 @@ Usage:
 ```
 If you have issues with the tool just tell me i will try and fix it :)
 
-(I know the code for dependencies is crappy im doing my best learning c++ :) )
+Note: you need to specify -v/-c after -d. -i, -b and -s. -p can be used apart. [ -v / -c will NOT boot ramdisk!!]
 
 Feel free to contribute on this project!
 
