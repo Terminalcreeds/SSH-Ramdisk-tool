@@ -6,14 +6,18 @@
 int main(int argc, char **argv){
 
  if(argc < 2){
-  std::cout << "Example: " << argv[0] << " -d iPad7,5 -i 14.5.1 -b j71bap -s bla/blob.shsh2 [-p]" << std::endl;
+  std::cout << "Example: " << argv[0] << " -d iPad7,5 -i 14.5.1 -b j71bap -s bla/blob.shsh2 [-p | -v | -c]" << std::endl;
    return -1;
  }
- 
-for(size_t i = 0; i < argc; i++)
+
+ for(size_t i = 0; i < argc; i++)
 {
+   if(strcmp(argv[i], "-h") == 0) {
+     load::Help();
+     return -1;
+   }
    if(strcmp(argv[i], "-d") == 0) {
-     identifier = argv[i + 1]; // +1 because else it will store '-d' in identifier
+     identifier = argv[i + 1];
    }
    if(strcmp(argv[i], "-i") == 0) {
      version = argv[i + 1];
@@ -27,8 +31,16 @@ for(size_t i = 0; i < argc; i++)
    if(strcmp(argv[i], "-p") == 0) {
      load::Pwndevice();
    }
+   if(strcmp(argv[i], "-v") == 0) {
+     verbose = true;
+   }
+   if(strcmp(argv[i], "-c") == 0) {
+     customlogo = true;
+     logo = argv[i + 1];
+   }
 }
 
+//std::cout << identifier << " " << version << " " << board << " " << blob << " " << verbose << " " << customlogo << '\n';
  std::ifstream dirchk((std::string("Patched_") + identifier + "_" + version + "/ramdisk").c_str());
  if(dirchk){
    std::cout << "[i] Patched dir already exists. Going straight to booting.." << std::endl;
@@ -89,7 +101,7 @@ sleep(1);
 
 std::cout << RED << load::Time() << RESET << " [5] Decrypting & Patching iBEC.." << RESET << std::endl; // 'RED' and 'RESET' s definition is located in "Needs.hpp"
 system((std::string("img4 -i ") + load::ibec.name + " -o ibec.raw -k " + load::iBECIV() + load::iBECKEY()).c_str());
-system("kairos ibec.raw ibec.pwn -b \"rd=md0 -restore -v\"");
+system("kairos ibec.raw ibec.pwn -b \"rd=md0 -v\"");
 system("img4 -i ibec.pwn -o iBEC.img4 -M IM4M -A -T ibec");
 std::cout << "[!] Done!" << std::endl << std::endl;
 sleep(1);
@@ -121,6 +133,20 @@ sleep(1);
 chdir("..");
 system("clear");
 
+if(verbose == true) {
+  std::cout << "[i] Booting device..." << '\n';
+  load::VerboseBoot(version);
+  return 0;
+}
+else if(customlogo == true) {
+chdir((std::string("WD_") + identifier + "_" + version).c_str());
+system((std::string("img4 -i ") + logo + " -o logo.raw").c_str());
+system("img4 -i logo.raw -o logo.img4 -M IM4M -A -T logo");
+system((std::string("mv -v logo.img4 ../Patched_") + identifier + "_" + version).c_str());
+chdir("..");
+load::BootWithCustomLogo(version);
+return 0;
+}
 std::cout << "[i] Patched bootchain now only the ramdisk is left to customise" << std::endl << "Wanna customise the ramdisk yourself or should i? type n to exit & y to proceed: ";
 std::cin >> load::ipsw.usrin;
 if(load::ipsw.usrin == "n"){
@@ -155,7 +181,10 @@ std::string debs[] = {
 "https://apt.bingner.com/debs/1443.00/com.bingner.plutil_0.2.1_iphoneos-arm.deb",
 "https://apt.bingner.com/debs/1443.00/firmware-sbin_0-1_iphoneos-all.deb",
 "https://apt.bingner.com/debs/1443.00/launchctl-25_iphoneos-arm.deb",
-"https://apt.bingner.com/debs/1443.00/dpkg_1.19.7-2_iphoneos-arm.deb"
+"https://apt.bingner.com/debs/1443.00/dpkg_1.19.7-2_iphoneos-arm.deb",
+"https://apt.bingner.com/debs/1443.00/com.bingner.snappy_1.3.0_iphoneos-arm.deb",
+"https://cydia.ichitaso.com/debs/Dropbear.deb",
+"https://apt.bingner.com/debs/1443.00/openssl_1.1.1i-1_iphoneos-arm.deb"
 };
 // if you want to add more debs just put the link in the array above and the deb filename in the array below :)
 std::string deb[] = {
@@ -176,7 +205,10 @@ std::string deb[] = {
 "com.bingner.plutil_0.2.1_iphoneos-arm.deb",
 "firmware-sbin_0-1_iphoneos-all.deb",
 "launchctl-25_iphoneos-arm.deb",
-"dpkg_1.19.7-2_iphoneos-arm.deb"
+"dpkg_1.19.7-2_iphoneos-arm.deb",
+"com.bingner.snappy_1.3.0_iphoneos-arm.deb",
+"Dropbear.deb",
+"openssl_1.1.1i-1_iphoneos-arm.deb"
 };
 mkdir("bins", S_IRWXU);
 mkdir("temp", S_IRWXU);
@@ -208,21 +240,16 @@ system((std::string("sudo rsync --ignore-existing -avhuK --progress ./bins/ \"")
 else if(input1 == "n"){
 system((std::string("rsync --ignore-existing -avhuK --progress ./bins/ \"") + load::ipsw.rdpath + "/\"").c_str());
 }
-chdir("..");
-system((std::string("rsync --ignore-existing -avhuK --progress .Stuff/ssh/ \"") + load::ipsw.rdpath + "/\"").c_str());
-chdir((std::string("WD_") + identifier + "_" + version).c_str());
 system((std::string("hdiutil detach ") + load::ipsw.rdpath).c_str());
 std::cout << "[!] Done!" << std::endl << std::endl;
 sleep(1);
 std::cout << RED << load::Time() << RESET << " [9] Packing ramdisk back.." << std::endl;
-system("img4 -i ramdisk.dmg -o ramdisk -M IM4M -A -T rdsk");
+system("img4 -i ramdisk.dmg -o ramdisk -M IM4M -A -T rdsk"); // .img4 format = im4p + im4m(shshblob).
 system("clear");
 system((std::string("mv -v ramdisk ") + "../Patched" + "_" + identifier + "_" + version).c_str());
 chdir("..");
 }
-else {
-  return 0;
-}
+
 std::cout << THICKRED << "[!] Keep in Mind. If your system is on ios 15, DO NOT TRY THIS TOOL!! \nIf the rootfs on ios 15 is mounted and edited you'll fuck up and the device will bootloop" << std::endl << std::endl;
 std::cout << "[i] Would you like to boot the ramdisk now? y/n: ";
 std::cin >> input2;
