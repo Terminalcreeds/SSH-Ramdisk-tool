@@ -7,6 +7,7 @@
 #include <ctime>
 #include <chrono>
 #include <algorithm>
+#include <getopt.h>
 
 struct loaders {
   std::string name;
@@ -49,6 +50,20 @@ static std::string Time(){
     std::strftime(&s[0], s.size(), "%H:%M:%S", std::localtime(&now));
     return s;
 }
+
+/*
+static struct option longopts[] = {
+  {"help", no_argument, NULL, 'h'},
+  { "identifier", required_argument, NULL, 'd' },
+  { "version", required_argument, NULL, 'i' },
+  { "board", required_argument, NULL, 'b' },
+  { "shsh", required_argument, NULL, 's' },
+  { "pwn", no_argument, NULL, 'p' },
+  { "verbose",   no_argument, NULL, 'v' },
+  {"custom", no_argument, NULL, 'c'},
+  { NULL, 0, NULL, 0 }
+};
+*/
 
 void GetManifest(std::string identifier, std::string version){ // gets buildmanifest and ipswlink
 mkdir((std::string("WD_") + identifier + "_" + version).c_str(), S_IRWXU);
@@ -268,7 +283,7 @@ chdir((std::string("WD_") + identifier + "_" + version).c_str());
 return ipsw.trustcache;
 }
 
-std::string iBSSIV() { 
+std::string iBSSIV() { // unused functs
 
 keys iBSSiv;
 
@@ -334,6 +349,9 @@ chdir((std::string("WD_") + identifier + "_" + version).c_str());
      }
     }
    }
+  else {
+    return iBSSkey.key;
+  }
   }
   return iBSSkey.key;
 }
@@ -436,10 +454,13 @@ return iBECkey.key;
 
 int Help() {
   std::cout << "Usage:" << std::endl;
-  std::cout << "\t-d <identifier>" << std::endl;
-  std::cout << "\t-i <version>" << std::endl;
-  std::cout << "\t-b <board>" << std::endl;
-  std::cout << "\t-s <blob>" << std::endl;
+  std::cout << "\t-d device identifier e.g. iPad7,5"        << std::endl;
+  std::cout << "\t-i iOS version e.g. 14.8"                 << std::endl;
+  std::cout << "\t-b boardconfig e.g. j71bAP"               << std::endl;
+  std::cout << "\t-s SHSH Blob file"                        << std::endl;
+  std::cout << "\t-p Pwn the device and remove sigchecks"   << std::endl;
+  std::cout << "\t-v Just boot the device verbose"          << std::endl;
+  std::cout << "\t-c Boot the device with custom boot logo" << std::endl;
   return 0;
 }
 
@@ -457,10 +478,11 @@ int Ramdisk(std::string version) {
     std::cerr << "Something really went wrong. Exiting..." << std::endl;
     exit(1);
   }
-  chdir((std::string("Patched") + "_" + version).c_str());
+  chdir((std::string("Patched") + "_" + identifier + "_" + version).c_str());
   sleep(2);
   std::cout << RED << Time() << RESET << " Sending iBSS.." << std::endl;
   system("irecovery -f iBSS.img4");
+  sleep(1);
   system("irecovery -f iBSS.img4");
   std::cout << RED << Time() << RESET << " Done!" << std::endl << std::endl;
   sleep(2);
@@ -580,6 +602,81 @@ while(1) {
   }
  }
  return 0;
+}
+int VerboseBoot(std::string version) {
+  std::ifstream iBSS((std::string("Patched") + "_" + identifier + "_" + version + "/iBSS.img4").c_str());
+  if(!iBSS){
+    std::cerr << "Something really went wrong. Exiting..." << std::endl;
+    exit(1);
+  }
+  chdir((std::string("Patched") + "_" + identifier + "_" + version).c_str());
+  sleep(2);
+  std::cout << RED << Time() << RESET << " Sending iBSS.." << std::endl;
+  system("irecovery -f iBSS.img4");
+  sleep(1);
+  system("irecovery -f iBSS.img4");
+  std::cout << RED << Time() << RESET << " Done!" << std::endl << std::endl;
+  sleep(2);
+  std::cout << RED << Time() << RESET << " Sending iBEC.." << std::endl;
+  system("irecovery -f iBEC.img4");
+  system("irecovery -f iBEC.img4");
+  std::cout << RED << Time() << RESET << " Done!" << std::endl << std::endl;
+  sleep(2);
+  system("irecovery -c \"go\"");
+  sleep(2);
+  std::cout << RED << Time() << RESET << " Sending DeviceTree.." << std::endl;
+  system("irecovery -f DeviceTree.img4");
+  std::cout << RED << Time() << RESET << " Done!" << std::endl << std::endl;
+  sleep(2);
+  system("irecovery -c \"devicetree\"");
+  sleep(2);
+  std::cout << RED << Time() << RESET << " Sending Kernelcache.." << std::endl;
+  system("irecovery -f KernelCache.img4");
+  std::cout << RED << Time() << RESET << " Done!" << std::endl;
+  sleep(2);
+  system("irecovery -c \"bootx\"");
+  sleep(1);
+  std::cout << "[i] Done! The device should be booting verbose :)" << '\n';
+  return 0;
+}
+int BootWithCustomLogo(std::string version) {
+  std::ifstream iBSS((std::string("Patched") + "_" + identifier + "_" + version + "/iBSS.img4").c_str());
+  if(!iBSS){
+    std::cerr << "Something really went wrong. Exiting..." << std::endl;
+    exit(1);
+  }
+  chdir((std::string("Patched") + "_" + identifier + "_" + version).c_str());
+  sleep(2);
+  std::cout << RED << Time() << RESET << " Sending iBSS.." << std::endl;
+  system("irecovery -f iBSS.img4");
+  system("irecovery -f iBSS.img4");
+  std::cout << RED << Time() << RESET << " Done!" << std::endl << std::endl;
+  sleep(2);
+  std::cout << RED << Time() << RESET << " Sending iBEC.." << std::endl;
+  system("irecovery -f iBEC.img4");
+  system("irecovery -f iBEC.img4");
+  std::cout << RED << Time() << RESET << " Done!" << std::endl << std::endl;
+  sleep(2);
+  system("irecovery -c \"go\"");
+  sleep(2);
+  std::cout << RED << Time() << " Sending custom logo.." << RESET << std::endl;
+  system("irecovery -f logo.img4");
+  std::cout << RED << Time() << " Done!" << std::endl << std::endl;
+  system("irecovery -c \"setpicture 5\"");
+  std::cout << RED << Time() << RESET << " Sending DeviceTree.." << std::endl;
+  system("irecovery -f DeviceTree.img4");
+  std::cout << RED << Time() << RESET << " Done!" << std::endl << std::endl;
+  sleep(2);
+  system("irecovery -c \"devicetree\"");
+  sleep(2);
+  std::cout << RED << Time() << RESET << " Sending Kernelcache.." << std::endl;
+  system("irecovery -f KernelCache.img4");
+  std::cout << RED << Time() << RESET << " Done!" << std::endl;
+  sleep(2);
+  system("irecovery -c \"bootx\"");
+  sleep(1);
+  std::cout << "[i] Done! The device should be booting with a custom bootlogo! :)" << '\n';
+  return 0;
 }
 };
 #endif /* Components_hpp */
