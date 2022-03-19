@@ -16,9 +16,8 @@ Compiling:
 g++ main.cc -o RamdiskMaker -std=c++11
 ```
 
-Usage:
+Options:
 ```c++
-    Options:
      -d device identifier e.g. iPad7,5
      -i iOS version e.g. 14.8
      -b boardconfig e.g. j71bAP
