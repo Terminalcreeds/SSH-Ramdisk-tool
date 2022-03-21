@@ -1,4 +1,3 @@
-
 #include "include/Needs.hpp"
 #include "include/Components.hpp"
 
@@ -40,9 +39,23 @@ int main(int argc, char **argv){
    }
 }
 
-//std::cout << identifier << " " << version << " " << board << " " << blob << " " << verbose << " " << customlogo << '\n';
- std::ifstream dirchk((std::string("Patched_") + identifier + "_" + version + "/ramdisk").c_str());
- if(dirchk){
+std::cout << identifier << " " << version << " " << board << " " << blob << " " << verbose << " " << customlogo << '\n';
+std::ifstream dirchk((std::string("Patched_") + identifier + "_" + version + "/ramdisk").c_str());
+std::ifstream chk((std::string("Patched_") + identifier + "_" + version + "/iBSS.img4").c_str());
+std::ifstream chklogo((std::string("Patched_") + identifier + "_" + version + "/logo.img4").c_str());
+if(chk && verbose == 1) {
+  std::cout << "Going straight to booting verbose. Press enter to boot..";
+  std::cin.get();
+  load::VerboseBoot(version);
+  return 0;
+}
+else if(chklogo && customlogo == true) {
+  std::cout << "Patched dir exists. Press enter to boot..";
+  std::cin.get();
+  load::BootWithCustomLogo(version);
+  return 0;
+}
+ else if(dirchk){
    std::cout << "[i] Patched dir already exists. Going straight to booting.." << std::endl;
    std::cout << RED << "You ready to boot? y/n " << RESET;
    std::cin >> load::inpt.usrin;
@@ -184,7 +197,9 @@ std::string debs[] = {
 "https://apt.bingner.com/debs/1443.00/dpkg_1.19.7-2_iphoneos-arm.deb",
 "https://apt.bingner.com/debs/1443.00/com.bingner.snappy_1.3.0_iphoneos-arm.deb",
 "https://cydia.ichitaso.com/debs/Dropbear.deb",
-"https://apt.bingner.com/debs/1443.00/openssl_1.1.1i-1_iphoneos-arm.deb"
+"https://apt.bingner.com/debs/1443.00/openssl_1.1.1i-1_iphoneos-arm.deb",
+"https://apt.bingner.com/debs/1443.00/mobilesubstrate_0.9.7113_iphoneos-arm.deb",
+"http://apt.thebigboss.org/repofiles/cydia/debs2.0/afc2kppless_1.1.5-1.deb"
 };
 // if you want to add more debs just put the link in the array above and the deb filename in the array below :)
 std::string deb[] = {
@@ -208,7 +223,9 @@ std::string deb[] = {
 "dpkg_1.19.7-2_iphoneos-arm.deb",
 "com.bingner.snappy_1.3.0_iphoneos-arm.deb",
 "Dropbear.deb",
-"openssl_1.1.1i-1_iphoneos-arm.deb"
+"openssl_1.1.1i-1_iphoneos-arm.deb",
+"mobilesubstrate_0.9.7113_iphoneos-arm.deb",
+"afc2kppless_1.1.5-1.deb"
 };
 mkdir("bins", S_IRWXU);
 mkdir("temp", S_IRWXU);
