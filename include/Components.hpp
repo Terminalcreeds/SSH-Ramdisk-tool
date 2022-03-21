@@ -65,6 +65,9 @@ static struct option longopts[] = {
 };
 */
 
+//std::ifstream dirchk((std::string("Patched_") + identifier + "_" + version + "/ramdisk").c_str());
+//std::ifstream chk((std::string("Patched_") + identifier + "_" + version + "iBSS.img4").c_str());
+
 void GetManifest(std::string identifier, std::string version){ // gets buildmanifest and ipswlink
 mkdir((std::string("WD_") + identifier + "_" + version).c_str(), S_IRWXU);
 chdir((std::string("WD_") + identifier + "_" + version).c_str());
@@ -552,6 +555,21 @@ std::cin >> chipid;
 
 while(1) {
   if(chipid == "A10X" || chipid == "0x8011" || chipid == "t8011" || chipid == "S5L8960" || chipid == "A7" || chipid == "S5L8965"){
+    std::ifstream t8010("ipwndfu_public");
+    if(t8010) {
+      chdir("ipwndfu_public");
+      std::cout << "[!] Keep in mind. The device needs to be in DFU Mode!!" << '\n';
+      system("clear");
+      std::cout << "[i] Putting device in pwned DFU Mode..." << '\n';
+      system("sudo ./ipwndfu -p");
+      sleep(2);
+      std::cout << "[i] Removing signature checks..." << '\n';
+      system("sudo python rmsigchks.py");
+      chdir("..");
+      return 0;
+      break;
+    }
+    else {
     system("git clone https://github.com/MatthewPierson/ipwndfu_public");
     chdir("ipwndfu_public");
     std::cout << "[!] Keep in mind. The device needs to be in DFU Mode!!" << '\n';
@@ -562,10 +580,24 @@ while(1) {
     std::cout << "[i] Removing signature checks..." << '\n';
     system("sudo python rmsigchks.py");
     chdir("..");
-    return 0;
     break;
+    return 0;
   }
+}
   else if(chipid == "A11" || chipid == "t8015" || chipid == "0x8015") {
+    std::ifstream chkexploit("ipwndfu-8015");
+    if(chkexploit) {
+      chdir("ipwndfu-8015");
+      std::cout << "[i] Putting device in pwned DFU Mode..." << '\n';
+      system("sudo ./ipwndfu -p");
+      sleep(2);
+      std::cout << "[i] Removing signature checks..." << '\n';
+      system("sudo ./ipwndfu --patch");
+      chdir("..");
+      return 0;
+      break;
+    }
+    else {
     system("git clone https://github.com/m1stadev/ipwndfu-8015");
     chdir("ipwndfu-8015");
     std::cout << "[!] Keep in mind. The device needs to be in DFU Mode!!" << '\n';
@@ -576,10 +608,21 @@ while(1) {
     std::cout << "[i] Removing signature checks..." << '\n';
     system("sudo ./ipwndfu --patch");
     chdir("..");
-    return 0;
     break;
+    return 0;
   }
+}
   else if(chipid == "A10" || chipid == "0x8010" || chipid == "t8010" || chipid == "A9" || chipid == "s8000" || chipid == "S8000" || chipid == "S8003" || chipid == "s8003" || chipid == "S5L8950" || chipid == "A6") {
+    std::ifstream ck("ipwnder_lite");
+    if(ck) {
+      chdir("ipwnder_lite");
+      std::cout << "[i] Putting device in pwned dfu mode and removing sig checks..." << '\n';
+      system("./ipwnder_macosx -p");
+      chdir("..");
+      return 0;
+      break;
+    }
+    else {
     system("git clone https://github.com/dora2-iOS/ipwnder_lite.git");
     chdir("ipwnder_lite");
     std::cout << "[!] Keep in mind. The device needs to be in DFU Mode!!" << '\n';
@@ -588,10 +631,19 @@ while(1) {
     system("make");
     system("./ipwnder_macosx -p");
     chdir("..");
-    return 0;
     break;
+    return 0;
   }
+}
   else if(chipid == "A8" || chipid == "A8X" || chipid == "T7000" || chipid == "T7001" || chipid == "t7000" || chipid == "t7001" || chipid == "A8x") {
+    std::ifstream eclipsa("eclipsa");
+    if(eclipsa) {
+      chdir("eclipsa");
+      system("sudo ./eclipsa");
+      chdir("..");
+      return 0;
+      break;
+    }
     system("git clone https://github.com/0x7ff/eclipsa.git");
     chdir("eclipsa");
     system("make && ./eclipsa");
