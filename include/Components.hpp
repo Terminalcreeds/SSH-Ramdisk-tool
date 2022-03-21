@@ -562,6 +562,7 @@ while(1) {
     std::cout << "[i] Removing signature checks..." << '\n';
     system("sudo python rmsigchks.py");
     chdir("..");
+    return 0;
     break;
   }
   else if(chipid == "A11" || chipid == "t8015" || chipid == "0x8015") {
@@ -575,6 +576,7 @@ while(1) {
     std::cout << "[i] Removing signature checks..." << '\n';
     system("sudo ./ipwndfu --patch");
     chdir("..");
+    return 0;
     break;
   }
   else if(chipid == "A10" || chipid == "0x8010" || chipid == "t8010" || chipid == "A9" || chipid == "s8000" || chipid == "S8000" || chipid == "S8003" || chipid == "s8003" || chipid == "S5L8950" || chipid == "A6") {
@@ -586,6 +588,7 @@ while(1) {
     system("make");
     system("./ipwnder_macosx -p");
     chdir("..");
+    return 0;
     break;
   }
   else if(chipid == "A8" || chipid == "A8X" || chipid == "T7000" || chipid == "T7001" || chipid == "t7000" || chipid == "t7001" || chipid == "A8x") {
@@ -593,6 +596,7 @@ while(1) {
     chdir("eclipsa");
     system("make && ./eclipsa");
     chdir("..");
+    return 0;
     break;
   }
   else {
