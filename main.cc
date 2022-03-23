@@ -43,7 +43,7 @@ int main(int argc, char **argv){
    }
 }
 
-std::cout << identifier << " " << version << " " << board << " " << blob << " " << verbose << " " << customlogo << '\n';
+//std::cout << identifier << " " << version << " " << board << " " << blob << " " << verbose << " " << customlogo << '\n';
 std::ifstream dirchk((std::string("Patched_") + identifier + "_" + version + "/ramdisk").c_str());
 std::ifstream chk((std::string("Patched_") + identifier + "_" + version + "/iBSS.img4").c_str());
 std::ifstream chklogo((std::string("Patched_") + identifier + "_" + version + "/logo.img4").c_str());
