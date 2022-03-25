@@ -27,11 +27,6 @@ int main(int argc, char const *argv[]) {
    posix_spawn(&pid, "/usr/local/bin/restored_external_original", NULL, NULL, (char* const*)arg3, NULL);
    waitpid(pid, &i, 0);
    sleep(1);
-   std::cout << THICKRED << "[i] Starting USB Services?" << RESET << '\n';
-   char* arg4[] = {"launchctl", "load", "-w", "/System/Library/AppleUSBDevice/USBDeviceConfiguration.plist"};
-   posix_spawn(&pid, "/bin/launchctl", NULL, NULL, (char* const*)arg4, NULL);
-   waitpid(pid, &i, 0);
-   std::cout << THICKRED << "[i] Done?" << RESET << '\n';
    sleep(99999);
   return 0;
 }
