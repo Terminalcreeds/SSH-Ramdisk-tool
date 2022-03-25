@@ -202,8 +202,8 @@ std::string debs[] = {
 "https://apt.bingner.com/debs/1443.00/com.bingner.snappy_1.3.0_iphoneos-arm.deb",
 "https://cydia.ichitaso.com/debs/Dropbear.deb",
 "https://apt.bingner.com/debs/1443.00/openssl_1.1.1i-1_iphoneos-arm.deb",
-"https://apt.bingner.com/debs/1443.00/mobilesubstrate_0.9.7113_iphoneos-arm.deb",
-"http://apt.thebigboss.org/repofiles/cydia/debs2.0/afc2kppless_1.1.5-1.deb"
+//"https://apt.bingner.com/debs/1443.00/mobilesubstrate_0.9.7113_iphoneos-arm.deb",
+//"http://apt.thebigboss.org/repofiles/cydia/debs2.0/afc2kppless_1.1.5-1.deb"
 };
 // if you want to add more debs just put the link in the array above and the deb filename in the array below :)
 std::string deb[] = {
@@ -228,8 +228,8 @@ std::string deb[] = {
 "com.bingner.snappy_1.3.0_iphoneos-arm.deb",
 "Dropbear.deb",
 "openssl_1.1.1i-1_iphoneos-arm.deb",
-"mobilesubstrate_0.9.7113_iphoneos-arm.deb",
-"afc2kppless_1.1.5-1.deb"
+//"mobilesubstrate_0.9.7113_iphoneos-arm.deb",
+//"afc2kppless_1.1.5-1.deb"
 };
 mkdir("bins", S_IRWXU);
 mkdir("temp", S_IRWXU);
